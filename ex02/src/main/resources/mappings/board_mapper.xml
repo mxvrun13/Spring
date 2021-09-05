@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yedam.app.board.mapper.BoardMapper">
+	<select id="getList" resultType="boardVO">
+		SELECT BNO, TITLE, CONTENT, WRITER, REGDATE, UPDATEDATE FROM TBL_BOARD WHERE BNO > 0 ORDER BY BNO DESC
+	</select>
+	
+	<select id="read" resultType="boardVO" parameterType="BoardVO">
+		SELECT BNO, TITLE, CONTENT, WRITER, REGDATE, UPDATEDATE FROM TBL_BOARD WHERE BNO = #{bno}
+	</select>
+	
+	<insert id="insert">
+		<selectKey keyProperty="bno" resultType="long" order="BEFORE">
+			SELECT SEQ_BOARD.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO TBL_BOARD(BNO, TITLE, CONTENT, WRITER) VALUES (#{bno}, #{title}, #{content}, #{writer})
+	</insert>
+	
+	<update id="update">
+		UPDATE TBL_BOARD SET TITLE = #{title}, CONTENT = #{content}, WRITER = #{writer}, UPDATEDATE = SYSDATE WHERE BNO = #{bno}	
+	</update>
+	
+	<delete id="delete">
+		DELETE FROM TBL_BOARD WHERE BNO = #{bno}
+	</delete>
+</mapper>
