@@ -2,26 +2,73 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yedam.app.board.mapper.BoardMapper">
-	<select id="getList" resultType="boardVO">
-		SELECT BNO, TITLE, CONTENT, WRITER, REGDATE, UPDATEDATE FROM TBL_BOARD WHERE BNO > 0 ORDER BY BNO DESC
+
+	<sql id="criteria">
+		<trim prefix="(" suffix=")" prefixOverrides="OR">
+			<foreach collection="typeArr" item="type">
+				<trim prefix="OR">
+					<choose>
+						<when test='type=="T"'>
+							TITLE LIKE '%' || #{keyword} || '%'
+						</when>
+						<when test='type=="C"'>
+							CONTENT LIKE '%' || #{keyword} || '%'
+						</when>
+						<when test='type=="W"'>
+							WRITER LIKE '%' || #{keyword} || '%'
+						</when>
+					</choose>
+				</trim>
+			</foreach>
+		</trim>
+	</sql>
+	
+	<select id="getTotalCount" resultType="int">
+		SELECT COUNT(*) FROM
+		TBL_BOARD
+		<where>
+			<include refid="criteria"></include>
+		</where>
+	</select>
+	
+	<select id="getList" resultType="BoardVO">
+		SELECT *
+		FROM (
+		SELECT
+		/* + INDEX_DESC(TBL_BOARD SYS_C007154) */
+		ROWNUM
+		RN, BNO, TITLE, CONTENT, WRITER, REGDATE, UPDATEDATE
+		FROM TBL_BOARD
+		<where>
+			<include refid="criteria"></include>
+                <![CDATA[   AND ROWNUM <= #{pageNum} * #{amount} ]]>
+		</where>
+		)
+		WHERE RN > (#{pageNum} - 1) * #{amount}
 	</select>
 	
 	<select id="read" resultType="boardVO" parameterType="BoardVO">
-		SELECT BNO, TITLE, CONTENT, WRITER, REGDATE, UPDATEDATE FROM TBL_BOARD WHERE BNO = #{bno}
+		SELECT BNO,
+		TITLE, CONTENT, WRITER, REGDATE, UPDATEDATE FROM TBL_BOARD WHERE BNO =
+		#{bno}
 	</select>
-	
+
 	<insert id="insert">
-		<selectKey keyProperty="bno" resultType="long" order="BEFORE">
+		<selectKey keyProperty="bno" resultType="long"
+			order="BEFORE">
 			SELECT SEQ_BOARD.NEXTVAL FROM DUAL
 		</selectKey>
-		INSERT INTO TBL_BOARD(BNO, TITLE, CONTENT, WRITER) VALUES (#{bno}, #{title}, #{content}, #{writer})
+		INSERT INTO TBL_BOARD(BNO, TITLE, CONTENT, WRITER) VALUES (#{bno},
+		#{title}, #{content}, #{writer})
 	</insert>
-	
+
 	<update id="update">
-		UPDATE TBL_BOARD SET TITLE = #{title}, CONTENT = #{content}, WRITER = #{writer}, UPDATEDATE = SYSDATE WHERE BNO = #{bno}	
+		UPDATE TBL_BOARD SET TITLE = #{title}, CONTENT =
+		#{content}, WRITER = #{writer}, UPDATEDATE = SYSDATE WHERE BNO =
+		#{bno}
 	</update>
-	
+
 	<delete id="delete">
-		DELETE FROM TBL_BOARD WHERE BNO = #{bno}
+		DELETE FROM TBL_BOARD WHERE BNO = #{bno}`
 	</delete>
 </mapper>

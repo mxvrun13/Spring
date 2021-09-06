@@ -12,6 +12,8 @@
 	<div class="col-lg-12">
 		<div class="panel-body">
 			<form role="form" action="${pageContext.request.contextPath }/board/modify" method="post">
+				<!-- <input type="hidden" name="pageNum" value="${cri.pageNum }">
+				<input type="hidden" name="amount" value="${cri.amount }">  -->
 				<div class="form-group">
 					<label>Title</label> <input class="form-control" name="title" value="${board.title }">
 				</div>
@@ -23,6 +25,7 @@
 				</div>
 				<button type="submit" class="btn btn-default">수정</button>
 				<button type="submit" formaction="${pageContext.request.contextPath }/board/delete" class="btn btn-default">삭제</button>
+				<a class="btn btn-success" href="list?pageNum=${cri.pageNum }&amount=${cri.amount }">목록</a>
 				<input type="hidden" value=${board.bno } name="bno">
 			</form>
 		</div>
