@@ -2,6 +2,7 @@ package com.yedam.app.employee.mapper;
 
 import java.util.List;
 
+import com.yedam.app.board.domain.Criteria;
 import com.yedam.app.employee.domain.EmployeeVO;
 
 
@@ -16,6 +17,7 @@ public interface EmpMapper {
 		
 		public EmployeeVO read(EmployeeVO vo);
 		
-		public List<EmployeeVO> getList();
+		public List<EmployeeVO> getList(Criteria cri);
 
+		public int getTotalCount(Criteria cri);
 }

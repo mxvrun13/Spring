@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.yedam.app.board.domain.BoardVO;
+import com.yedam.app.board.domain.Criteria;
+import com.yedam.app.board.domain.PageVO;
 import com.yedam.app.employee.domain.EmployeeVO;
 import com.yedam.app.employee.service.EmpService;
 
@@ -19,8 +20,10 @@ public class EmpController {
 	@Autowired EmpService empService;
 	
 	@GetMapping("/list")
-	public void list(Model model) {
-		model.addAttribute("list", empService.getList());
+	public void list(Model model, Criteria cri) {
+		int total = empService.getTotalCount(cri);
+		model.addAttribute("list", empService.getList(cri));
+		model.addAttribute("pageMaker", new PageVO(cri, total));
 	}
 	
 	@GetMapping("/get")

@@ -2,25 +2,44 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yedam.app.employee.mapper.EmpMapper">
+	
+	<select id="getTotalCount" resultType="int">
+		SELECT COUNT(*) FROM
+		TBL_EMP
+	</select>
+
 	<select id="getList" resultType="employeeVO">
-		SELECT EMPNO, EMPNAME, HIREDATE, DEPARTMENT, SALARY FROM TBL_EMP WHERE EMPNO > 0 ORDER BY EMPNO
+		SELECT *
+		FROM (
+		SELECT
+		/* + INDEX_DESC(TBL_EMP SYS_C007478) */
+		ROWNUM
+		RN, EMPNO, EMPNAME, HIREDATE, DEPARTMENT, SALARY
+		FROM TBL_EMP
+		)
+		WHERE RN > (#{pageNum} - 1) * #{amount}
 	</select>
-	
-	<select id="read" resultType="employeeVO" parameterType="EmployeeVO">
-		SELECT EMPNO, EMPNAME, HIREDATE, DEPARTMENT, SALARY FROM TBL_EMP WHERE EMPNO = #{empno}
+
+	<select id="read" resultType="employeeVO"
+		parameterType="EmployeeVO">
+		SELECT EMPNO, EMPNAME, HIREDATE, DEPARTMENT, SALARY FROM
+		TBL_EMP WHERE EMPNO = #{empno}
 	</select>
-	
+
 	<insert id="insert">
-		<selectKey keyProperty="empno" resultType="int" order="BEFORE">
+		<selectKey keyProperty="empno" resultType="int"
+			order="BEFORE">
 			SELECT SEQ_EMP.NEXTVAL FROM DUAL
 		</selectKey>
-		INSERT INTO TBL_EMP(EMPNO, EMPNAME, HIREDATE, DEPARTMENT, SALARY) VALUES (#{empno}, #{empname}, #{hiredate}, #{department}, #{salary})
+		INSERT INTO TBL_EMP(EMPNO, EMPNAME, HIREDATE, DEPARTMENT, SALARY)
+		VALUES (#{empno}, #{empname}, #{hiredate}, #{department}, #{salary})
 	</insert>
-	
+
 	<update id="update">
-		UPDATE TBL_EMP SET EMPNAME = #{empname}, DEPARTMENT = #{department}, SALARY = #{salary} WHERE EMPNO = #{empno}	
+		UPDATE TBL_EMP SET EMPNAME = #{empname}, DEPARTMENT =
+		#{department}, SALARY = #{salary} WHERE EMPNO = #{empno}
 	</update>
-	
+
 	<delete id="delete">
 		DELETE FROM TBL_EMP WHERE EMPNO = #{empno}
 	</delete>
