@@ -3,6 +3,10 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yedam.app.board.mapper.BoardMapper">
 
+	<update id="updateReplycnt">
+		UPDATE TBL_BOARD SET REPLYCNT = REPLYCNT + #{amount} WHERE BNO = #{bno}
+	</update>
+
 	<sql id="criteria">
 		<trim prefix="(" suffix=")" prefixOverrides="OR">
 			<foreach collection="typeArr" item="type">
@@ -35,9 +39,9 @@
 		SELECT *
 		FROM (
 		SELECT
-		/* + INDEX_DESC(TBL_BOARD SYS_C007154) */
+		/* + INDEX_DESC(TBL_BOARD SYS_C007151) */
 		ROWNUM
-		RN, BNO, TITLE, CONTENT, WRITER, REGDATE, UPDATEDATE
+		RN, BNO, TITLE, CONTENT, WRITER, REGDATE, REPLYCNT
 		FROM TBL_BOARD
 		<where>
 			<include refid="criteria"></include>
@@ -69,6 +73,6 @@
 	</update>
 
 	<delete id="delete">
-		DELETE FROM TBL_BOARD WHERE BNO = #{bno}`
+		DELETE FROM TBL_BOARD WHERE BNO = #{bno}
 	</delete>
 </mapper>

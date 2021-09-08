@@ -3,8 +3,22 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yedam.app.board.mapper.ReplyMapper">
 	
+	<select id="getCountByBno" resultType="int">
+		SELECT COUNT(*) FROM
+		TBL_REPLY
+		WHERE BNO = #{bno}
+	</select>
+	
 	<select id="getList" resultType="replyVO">
-		SELECT RNO, BNO, REPLY, REPLYER, REPLYDATE, UPDATEDATE FROM TBL_REPLY WHERE BNO = #{bno}
+		SELECT RNO, RNO, BNO, REPLY, REPLYER, REPLYDATE, UPDATEDATE
+		FROM
+		(SELECT /* + INDEX(TBL_REPLY PL_REPLY) */
+		ROWNUM RN, RNO, BNO, REPLY, REPLYER, REPLYDATE, UPDATEDATE 
+		FROM TBL_REPLY
+		WHERE BNO = #{bno}
+		AND RNO > 0
+		AND <![CDATA[ ROWNUM <= #{cri.pageNum} * #{cri.amount} ]]>
+		) WHERE RN > (#{cri.pageNum} - 1 ) * #{cri.amount}
 	</select>
 	
 	<select id="read" resultType="replyVO">

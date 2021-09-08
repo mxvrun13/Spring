@@ -19,4 +19,8 @@ public interface ReplyMapper {
 	
 	public int delete(ReplyVO vo);
 	
+	public List<ReplyVO> getListWithPaging(@Param("cri") Criteria cri, @Param("bno") Long bno);
+	
+	public int getCountByBno(Long bno); //해당 게시글의 댓글 수
+	
 }

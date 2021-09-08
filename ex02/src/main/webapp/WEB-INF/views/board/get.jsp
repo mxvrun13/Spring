@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 <%@ include file="/WEB-INF/views/includes/header.jsp"%>
 <div class="row">
@@ -43,7 +44,7 @@
 <div class="panel-heading">
 	<form id="replyForm">
 		<input type="hidden" name="bno" value="${board.bno }"> <input
-			name="replyer" value="user10"> <input name="reply">
+			name="replyer"> <input name="reply">
 		<button type="button" id="saveReply">댓글 등록</button>
 	</form>
 </div>
@@ -54,6 +55,18 @@
 		<hr>
 		<ul class="chat">
 		</ul>
+	</div>
+		<div id="pageButton">
+		<c:if test="${pageMaker.prev }">
+			<a href="${pageMaker.startPage-1 }">이전</a>
+		</c:if>
+		<c:forEach begin="${pageMaker.startPage }" end="${pageMaker.endPage }"
+			var="num">
+			<a href="${num }">${num }</a>
+		</c:forEach>
+		<c:if test="${pageMaker.next }">
+			<a href="${pageMaker.endPage+1 }">다음</a>
+		</c:if>
 	</div>
 </div>
 
@@ -102,5 +115,6 @@
 			}
 		});
 	});
+	
 </script>
 <%@ include file="/WEB-INF/views/includes/footer.jsp"%>
