@@ -37,6 +37,12 @@
 					href="list?pageNum=${cri.pageNum }&amount=${cri.amount }">목록</a> <input
 					type="hidden" value=${board.bno } name="bno">
 			</form>
+			<div class="form-group"><br>
+			<!-- 첨부파일 -->
+				<c:forEach var="attach" items="${board.attachList }">
+					<p><a href="download?uuid=${attach.uuid }">${attach.fileName }</a></p>
+				</c:forEach>
+			</div>
 		</div>
 	</div>
 </div>
@@ -108,8 +114,8 @@
 			success: function (datas) {
 				console.log(datas);
 				str = "";
-				for (i = 0; i < datas.length; i++) {
-					str += makeLi(datas[i]);
+				for (i = 0; i < datas.list.length; i++) {
+					str += makeLi(datas.list[i]);
 				$(".chat").html(str);
 				}
 			}
