@@ -78,6 +78,21 @@
 
 <script type="text/javascript">
 	let bno = "${board.bno}";
+	
+	function replyDel() {
+		let rno = $('#rno').val();
+		
+		$.ajax({
+			url : "../reply/"+rno,
+			method : "delete",		
+			data : {rno:rno},		
+			dataType : "json",
+			success : function(data) {
+				$("#rno").parent().parent().remove();
+			}
+		});
+	}
+	
 	$(function () {
 		//등록처리
 		$("#saveReply").on("click", function () {
@@ -93,17 +108,15 @@
 			});
 		});
 		
-		function makeLi(data){
-			return '<li class="left clearfix">' +
-			'	<div>' +
-			'			<div class="header">' +
-			'				<strong class="primary-font">' + data.replyer + '</strong> ' +
-			'				<small	class="pull-right text-muted">' + data.replyDate +
-			'</small>' +
-			'			</div>' +
-			'			<p>' + data.reply + '</p>' +
-			'		</div>' +
-			'	</li> ';
+		function makeLi(data) {
+			return '<li>'
+				+ '<div class="panel panel-default">'
+				+ '<input type="hidden" id="rno" value="' + data.rno + '"><div class="panel-heading">' + data.replyer 
+				+ ' | ' + data.replydate + '<button type="button" onclick="replyDel()" class="btn btn-default" style="float: right;">삭제</button>'
+				+ '</div>'   
+				+ '<div class="panel-body">' + data.reply + '</div>'
+				+ '</div>'
+				+ '</li>';
 		}
 		
 		//목록조회
